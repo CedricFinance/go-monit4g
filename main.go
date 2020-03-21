@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"monit4g/huawei4g"
-	"monit4g/metrics"
+	"github.com/CedricFinance/go-monit4g/huawei4g"
+	"github.com/CedricFinance/go-monit4g/metrics"
 	"time"
 )
 

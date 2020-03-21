@@ -2,9 +2,9 @@ package metrics
 
 import (
 	"fmt"
+	"github.com/CedricFinance/go-monit4g/huawei4g"
 	"github.com/influxdata/influxdb/client/v2"
 	"log"
-	"monit4g/huawei4g"
 	"time"
 )
 

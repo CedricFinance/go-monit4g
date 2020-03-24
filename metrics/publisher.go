@@ -28,13 +28,13 @@ func NewPublisher(host, port, database string) *MetricsPublisher {
 	}
 }
 
-func (p MetricsPublisher) SendMetrics(routerName string, stats *huawei4g.TrafficStatistics) {
+func (p MetricsPublisher) SendMetrics(routerName string, stats *huawei4g.TrafficStatistics) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  p.database,
 		Precision: "s",
 	})
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	tags := map[string]string{"router": routerName}
@@ -50,15 +50,13 @@ func (p MetricsPublisher) SendMetrics(routerName string, stats *huawei4g.Traffic
 
 	pt, err := client.NewPoint("network_usage", tags, fields, time.Now())
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	bp.AddPoint(pt)
 
 	if err := p.client.Write(bp); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	if err := p.client.Close(); err != nil {
-		log.Fatal(err)
-	}
+	return p.client.Close()
 }

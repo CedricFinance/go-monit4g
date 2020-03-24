@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/CedricFinance/go-monit4g/huawei4g"
 	"github.com/CedricFinance/go-monit4g/metrics"
+	"log"
 	"time"
 )
 
@@ -16,11 +16,19 @@ func main() {
 	for {
 		stats, err := router.GetTrafficStatistics()
 		if err != nil {
-			panic(err)
+			log.Printf("Failed to get the traffic statistics: %q\n", err)
+			time.Sleep(10 * time.Second)
+			continue
 		}
-		fmt.Printf("%+v\n", stats)
 
-		publisher.SendMetrics(cfg.Router.Name, stats)
+		log.Printf("%+v\n", stats)
+
+		err = publisher.SendMetrics(cfg.Router.Name, stats)
+		if err != nil {
+			log.Printf("Failed to send the metrics: %q\n", err)
+			time.Sleep(10 * time.Second)
+			continue
+		}
 
 		time.Sleep(1 * time.Minute)
 	}
